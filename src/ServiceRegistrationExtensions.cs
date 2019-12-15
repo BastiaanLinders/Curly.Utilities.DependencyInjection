@@ -16,29 +16,31 @@ namespace Utilities.DependencyInjection
 			new T().RegisterServices(serviceCollection, configuration);
 		}
 
-		public static IServiceCollection AddTransientForAllImplementedInterfaces<T>(this IServiceCollection serviceCollection)
+		public static IServiceCollection AddTransientAsImplementedInterfaces<T>(this IServiceCollection serviceCollection)
 		{
-			RegisterForAllImplementedInterfaces(typeof(T), serviceCollection.AddTransient);
+			RegisterAsImplementedInterfaces(typeof(T), serviceCollection.AddTransient);
 			return serviceCollection;
 		}
 
-		public static IServiceCollection AddSingletonForAllImplementedInterfaces<T>(this IServiceCollection serviceCollection)
+		public static IServiceCollection AddSingletonAsImplementedInterfaces<T>(this IServiceCollection serviceCollection)
 		{
-			RegisterForAllImplementedInterfaces(typeof(T), serviceCollection.AddSingleton);
+			RegisterAsImplementedInterfaces(typeof(T), serviceCollection.AddSingleton);
 			return serviceCollection;
 		}
 
-		public static IServiceCollection AddScopedForAllImplementedInterfaces<T>(this IServiceCollection serviceCollection)
+		public static IServiceCollection AddScopedAsImplementedInterfaces<T>(this IServiceCollection serviceCollection)
 		{
-			RegisterForAllImplementedInterfaces(typeof(T), serviceCollection.AddScoped);
+			RegisterAsImplementedInterfaces(typeof(T), serviceCollection.AddScoped);
 			return serviceCollection;
 		}
 
-		private static void RegisterForAllImplementedInterfaces(Type typeToRegister, Func<Type, Type, IServiceCollection> scopedRegistration)
+		private static void RegisterAsImplementedInterfaces(Type typeToRegister, Func<Type, Type, IServiceCollection> scopedRegistration)
 		{
 			var implementedInterfaces = typeToRegister.GetInterfaces();
 			foreach (var implementedInterface in implementedInterfaces)
+			{
 				scopedRegistration.Invoke(implementedInterface, typeToRegister);
+			}
 		}
 	}
 }
